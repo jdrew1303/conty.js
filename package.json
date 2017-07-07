@@ -1,0 +1,27 @@
+{
+  "name": "conty.js",
+  "version": "1.0.0",
+  "description": "Functional JS library for making accounting simple",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ponyesteves/conty.js.git"
+  },
+  "keywords": [
+    "accounting",
+    "functional",
+    "js",
+    "simple",
+    "contabilidad",
+    "simple"
+  ],
+  "author": "@ponyesteves (http://ceibo.co)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ponyesteves/conty.js/issues"
+  },
+  "homepage": "https://github.com/ponyesteves/conty.js#readme"
+}
