@@ -2,9 +2,21 @@
   "name": "conty.js",
   "version": "1.0.0",
   "description": "Functional JS library for making accounting simple",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "babel src -d dist",
+    "dev": "babel src --watch -d dist",
+    "test": "jest",
+    "test:watch": "npm test -- --watch",
+    "prepublish": "npm run build",
+    "release": "np"
+  },
+  "babel": {
+    "presets": [
+      "latest",
+      "stage-3"
+    ]
   },
   "repository": {
     "type": "git",
@@ -23,5 +35,17 @@
   "bugs": {
     "url": "https://github.com/ponyesteves/conty.js/issues"
   },
-  "homepage": "https://github.com/ponyesteves/conty.js#readme"
+  "homepage": "https://github.com/ponyesteves/conty.js#readme",
+  "devDependencies": {
+    "@types/jest": "^20.0.2",
+    "babel-cli": "^6.24.1",
+    "babel-preset-latest": "^6.24.1",
+    "babel-preset-stage-3": "^6.24.1",
+    "jest": "^20.0.4"
+  },
+  "dependencies": {
+    "@types/ramda": "^0.24.4",
+    "ramda": "^0.24.1",
+    "ramda-fantasy": "^0.8.0"
+  }
 }
