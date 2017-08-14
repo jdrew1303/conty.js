@@ -16,7 +16,7 @@ describe('createAccount missing keys errors', () => {
 describe('createAccount valid with all required keys', () => {
   //returns undefined
   it('has errors if type missing name or name', () => {
-    expect(createAccount({ name: 'account', type: 'activo' }).errors.missingKeys).toBeFalsy()
+    expect(createAccount({ name: 'account', type: 'activo' }).errors).toBeFalsy()
   })
 })
 
@@ -29,7 +29,7 @@ describe('createAccount invalid for missing type', () => {
 describe('createAccount valid for type', () => {
    //returns undefined
   it('has no errors if type has valid value', () => {
-    expect(createAccount({ name: 'new', type: 'activo' }).errors.notValidValues).toBeFalsy()
+    expect(createAccount({ name: 'new', type: 'activo' }).errors).toBeFalsy()
   })
 
 })
