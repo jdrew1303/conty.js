@@ -27,24 +27,23 @@ describe('createAccount invalid for missing type', () => {
 })
 
 describe('createAccount valid for type', () => {
-   //returns undefined
+  //returns undefined
   it('has no errors if type has valid value', () => {
     expect(createAccount({ name: 'new', type: 'activo' }).errors).toBeFalsy()
   })
-
 })
 
 describe('createAccount valid', () => {
- it('returns object with keys name', () => {
-  expect(Object.keys(createAccount({ name: 'new', type: 'activo' }))).toContain('name')
- })
- it('returns object with keys type', () => {
-  expect(Object.keys(createAccount({ name: 'new', type: 'activo' }))).toContain('type')
- })
- it('returns object with keys _id', () => {
-  expect(Object.keys(createAccount({ name: 'new', type: 'activo' }))).toContain('_id')
- })
- it('returns object with keys _id === name', () => {
-  expect(createAccount({ name: 'new', type: 'activo' })._id).toBe('new')
- })
+  it('returns object with keys name', () => {
+    expect(Object.keys(createAccount({ name: 'new', type: 'activo' }))).toContain('name')
+  })
+  it('returns object with keys type', () => {
+    expect(Object.keys(createAccount({ name: 'new', type: 'activo' }))).toContain('type')
+  })
+  it('returns object with keys _id', () => {
+    expect(Object.keys(createAccount({ name: 'new', type: 'activo' }))).toContain('_id')
+  })
+  it('returns object with keys _id === name', () => {
+    expect(createAccount({ name: 'new', type: 'activo' })._id).toBe('new')
+  })
 })
