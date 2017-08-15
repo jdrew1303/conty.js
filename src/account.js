@@ -11,7 +11,7 @@ export const createAccount = (conf = defaultConf) => {
     return Right(propsObj)
       .chain(containsRequiredKeys(['name', 'type']))
       .chain(containsValidValuesForKeys([{ keyName: 'type', validValues: conf.validTypes }]))
-      .either((errors) => ({ errors }), (propsObj) => ({ ...propsObj, _id: propsObj.name }))
+      .either(propsObjWithErrors => propsObjWithErrors, (propsObj) => ({ ...propsObj, _id: propsObj.name }))
   }
 }
 

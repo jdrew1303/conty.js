@@ -20,11 +20,14 @@ describe('createItem valid with all required keys', () => {
   })
 })
 
-describe('createItem valid', () => {
+describe('createItem valid with all keys', () => {
   it('returns object with keys name', () => {
     expect(Object.keys(createItem({ accountId: 'new', amount: 25, dueDate: new Date() }))).toContain('accountId')
   })
   it('returns object with keys type', () => {
     expect(Object.keys(createItem({ accountId: 'new', amount: 25, dueDate: new Date() }))).toContain('amount')
+  })
+  it('returns object with keys _id', () => {
+    expect(Object.keys(createItem({ accountId: 'new', amount: 25, dueDate: new Date() }))).toContain('_id')
   })
 })

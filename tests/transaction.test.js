@@ -1,30 +1,59 @@
-import { addItem, addItems, validateTransaction } from '../src'
+import { createItem, addItem, addItems, removeItem, updateItem, validateTransaction } from '../src'
+import R from 'ramda'
 
 describe('addItem to transaction', () => {
   it('adds item to empty transaction', () => {
-    expect(addItem({ accountId: 'bankYYY', amount: 1 }).items).toEqual([{ accountId: 'bankYYY', amount: 1 }])
+    expect(R.pick(['accountId', 'amount'], addItem({ accountId: 'bankYYY', amount: 1 }).items[0])).toEqual({ accountId: 'bankYYY', amount: 1 })
   })
 })
 
 describe('addItems to transaction', () => {
   it('adds items to empty transaction', () => {
-    expect(addItems([{ accountId: 'bankYYY', amount: 1 }]).items).toEqual([{ accountId: 'bankYYY', amount: 1 }])
+    expect(R.pick(['accountId', 'amount'], addItems([{ accountId: 'bankYYY', amount: 1 }]).items[0])).toEqual({ accountId: 'bankYYY', amount: 1 })
   })
 })
 
 describe('it validates transactions', () => {
   it('adds error if amount not zero', () => {
     expect(
-      validateTransaction(
-        addItems([{ accountId: 'bankYYY', amount: 1 }]))
+      addItems([{ accountId: 'bankYYY', amount: 1 }])
         .errors.join(''))
       .toMatch('zero')
   })
-  it('has no error if amount equals zero', () => {
-     expect(
-      validateTransaction(
-        addItems([{ accountId: 'bankYYY', amount: 1 },{ accountId: 'bankZZZ', amount: -1 }]))
+
+  it('has no error if amount not zero', () => {
+    expect(
+      addItems([{ accountId: 'bankYYY', amount: 1, dueDate: new Date() }, { accountId: 'bankZZZ', amount: -1, dueDate: new Date() }])
         .errors)
-      .toBeFalsy()
+      .toEqual([])
+  })
+
+})
+
+
+fdescribe('it removes item from transactions', () => {
+  it('add two item', () => {
+    expect(
+      addItems([
+        { accountId: 'bankYYY', amount: 1 },
+        { accountId: 'bankZZZ', amount: -1 }
+      ]).items.length
+    ).toEqual(2)
+  })
+  it('add two item', () => {
+    const item1 = createItem({ accountId: 'bankYYY', amount: 1 }),
+    item2 = createItem({ accountId: 'bankZZZ', amount: -1 }),
+    transaction = addItems([item1, item2])
+    expect(removeItem(item1._id, transaction).items.length).toEqual(1)
+    expect(removeItem(item2._id, removeItem(item1._id, transaction)).items.length).toEqual(0)
+  })
+  it('update item', () => {
+    const item1 = createItem({ accountId: 'bankYYY', amount: 1 }),
+    item2 = createItem({ accountId: 'bankZZZ', amount: -3 }),
+    transaction = addItems([item1, item2])
+    expect(transaction.errors.join('')).toMatch('zero')
+    const updatedTransaction = updateItem({...item2, amount: -1}, transaction)
+    expect(updatedTransaction.errors.join('')).not.toMatch('zero')
+    expect(updatedTransaction.items.length).toEqual(2)
   })
 })

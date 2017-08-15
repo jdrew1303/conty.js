@@ -6,3 +6,4 @@ export const generateRandomWithSize = (size) => {
 }
 
 export const generateRandomOfFour = generateRandomWithSize(4)
+export const generateRandomOfSix = generateRandomWithSize(6)
