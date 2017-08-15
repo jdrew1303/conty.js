@@ -8,7 +8,7 @@ import { containsRequiredKeys, containsValidValuesForKeys } from './validators'
 
 export const createAccount = (conf = defaultConf) => {
   return (propsObj) => {
-    return Right(propsObj)
+    return Right({...propsObj, errors: [] })
       .chain(containsRequiredKeys(['name', 'type']))
       .chain(containsValidValuesForKeys([{ keyName: 'type', validValues: conf.validTypes }]))
       .either(propsObjWithErrors => propsObjWithErrors, (propsObj) => ({ ...propsObj, _id: propsObj.name }))
@@ -16,3 +16,12 @@ export const createAccount = (conf = defaultConf) => {
 }
 
 
+export const generateSaveAccount = (saveAccountFx) => {
+  return (account) => {
+    if(account.errors.length > 0){
+      throw "Can not save transaction due to errors"
+    } else {
+      return saveAccountFx(transaction)
+    }
+  }
+}

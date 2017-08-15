@@ -6,7 +6,7 @@ import { generateRandomOfSix } from './helpers'
 const generateItemId = () => `${new Date().toISOString().slice(-4)}TOKEN${generateRandomOfSix()}`
 
 export const createItem = (propsObj) => {
-  return Right({_id: propsObj._id || generateItemId(), ...propsObj})
+  return Right({_id: propsObj._id || generateItemId(), errors: [], ...propsObj})
   .chain(containsRequiredKeys(['accountId', 'amount','dueDate']))
   .either(propsObjWithErrors => propsObjWithErrors, propsObj => propsObj)
 }

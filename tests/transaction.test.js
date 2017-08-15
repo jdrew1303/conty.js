@@ -57,12 +57,11 @@ describe('it removes item from transactions', () => {
     expect(updatedTransaction.items.length).toEqual(2)
   })
 })
-fdescribe('generate Save transaction', () => {
+describe('generate Save transaction', () => {
   const item1 = createItem({ accountId: 'bankYYY', amount: 1, dueDate: new Date() }),
   item2 = createItem({ accountId: 'bankZZZ', amount: -3, dueDate: new Date() }),
   item3 = createItem({ accountId: 'bankZZZ', amount: -1, dueDate: new Date() }),
   mySaveTransactionFx = generateSaveTransaction((transaction) => {
-    console.log(transaction)
     return true
   })
   it('throw error if transacion has errors', () => {

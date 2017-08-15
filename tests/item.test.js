@@ -2,21 +2,20 @@ import { createItem } from '../src'
 
 describe('createItem missing keys errors', () => {
   it('has errors if missing amount', () => {
-    expect(createItem({ accountId: 'bankYYY' }).errors.missingKeys).toContain('amount')
+    expect(createItem({ accountId: 'bankYYY' }).errors.find(error => error.type === 'missingKeys').values).toContain('amount')
   })
   it('has errors if type missing accountId', () => {
-    expect(createItem({ amount: 25.25 }).errors.missingKeys).toContain('accountId')
+    expect(createItem({ amount: 25.25 }).errors.find(error => error.type === 'missingKeys').values).toContain('accountId')
   })
   it('has errors if type missing name or name', () => {
-    expect(createItem({}).errors.missingKeys).toContain('amount')
-    expect(createItem({}).errors.missingKeys).toContain('accountId')
+    expect(createItem({}).errors.find(error => error.type === 'missingKeys').values).toContain('amount')
+    expect(createItem({}).errors.find(error => error.type === 'missingKeys').values).toContain('accountId')
   })
 })
 
 describe('createItem valid with all required keys', () => {
-  //returns undefined
-  it('has errors if type missing name or name', () => {
-    expect(createItem({ accountId: 'account', amount: 25.25, dueDate: new Date() }).errors).toBeFalsy()
+  it('has no errors when all required keys are present', () => {
+    expect(createItem({ accountId: 'account', amount: 25.25, dueDate: new Date() }).errors.length).toEqual(0)
   })
 })
 
