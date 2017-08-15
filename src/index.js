@@ -1,6 +1,6 @@
 import { createAccount } from './account'
 import { createItem } from './item'
-import { addItem, addItems } from './transaction'
+import { addItem, addItems, validateTransaction } from './transaction'
 
 
-export { createAccount, createItem, addItem, addItems }
+export { createAccount, createItem, addItem, addItems, validateTransaction }
