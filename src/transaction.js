@@ -29,7 +29,7 @@ export const removeItem = (itemId, transaction) => {
 export const updateItem = (modifiedItem, transaction) => {
   return validateTransaction({
     ...transaction,
-    items: transaction.items.map(item => item._id === modifiedItem._id ? modifiedItem : item )
+    items: transaction.items.map(item => item._id === modifiedItem._id ? createItem(modifiedItem) : item )
   })
 }
 
@@ -64,4 +64,14 @@ const addItemErrors = (transaction, itemsErrors) => (
 
 const clearErrors = (transaction) => {
   return {...transaction, errors: []} 
+}
+
+export const generateSaveTransaction = (saveFx) => {
+  return (transaction) => {
+    if(transaction.errors.length > 0){
+      throw "Can not save transaction due to errors"
+    } else {
+      return saveFx(transaction)
+    }
+  }
 }
