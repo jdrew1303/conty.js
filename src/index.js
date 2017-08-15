@@ -1,10 +1,13 @@
-import { createAccount } from './account'
+import { generateCreateAccount, generateSaveAccount } from './account'
 import { createItem } from './item'
 import { addItem, addItems, removeItem, updateItem, validateTransaction, generateSaveTransaction } from './transaction'
 import { getBalanceOf } from './balance'
 
+
+// API
 export { 
-  createAccount, 
+  generateCreateAccount,
+  generateSaveAccount,
   createItem, 
   addItem, 
   addItems,
