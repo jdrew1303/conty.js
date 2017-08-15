@@ -25,6 +25,7 @@ const checkAmount = (transaction) => (
   transaction.items.reduce((prev, curr) => prev + curr.amount, 0) === 0 ? transaction : addAmountNotZeroError(transaction)
 )
 
+// Add new validations functions to the array
 const validations = [
   checkAmount
 ]
