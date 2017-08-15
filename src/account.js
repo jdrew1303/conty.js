@@ -6,7 +6,7 @@ const defaultConf = {
 // myHelpers
 import { containsRequiredKeys, containsValidValuesForKeys } from './validators'
 
-export const createAccount = (conf = defaultConf) => {
+export const generateCreateAccount = (conf = defaultConf) => {
   return (propsObj) => {
     return Right({...propsObj, errors: [] })
       .chain(containsRequiredKeys(['name', 'type']))
@@ -19,9 +19,9 @@ export const createAccount = (conf = defaultConf) => {
 export const generateSaveAccount = (saveAccountFx) => {
   return (account) => {
     if(account.errors.length > 0){
-      throw "Can not save transaction due to errors"
+      throw "Can not save account due to errors"
     } else {
-      return saveAccountFx(transaction)
+      return saveAccountFx(account)
     }
   }
 }
