@@ -2,13 +2,27 @@
 
 ## Use
 
-### createAccount(confObj = defaultConfObj)
+### generateCreateAccount(confObj = defaultConfObj)
 
   defaultConfObj = {
     validTypes: ['assets', 'liabilities', 'equity', 'bank', 'incomes', 'expenses']
   }
   
-  createAccount returns a function that recibe the acocount props, validates it's structure and return the account in a valid format for saving with thek _id key.  
+  generateCreateAccount returns a createAccount function that recibe the account props, validates it's structure and return the account in a valid format for saving with thek _id key.  
 
   ### createItem(itemObj)
   
+
+
+account: 
+{
+  _id: same as name
+  name: string has no validation
+  type: string has array validation
+  error: array of error objects
+}
+
+transaction: {
+  _id: generatedRandomly,
+  items: item[]
+}

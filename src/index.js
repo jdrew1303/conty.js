@@ -1,6 +1,6 @@
 import { generateCreateAccount, generateSaveAccount } from './account'
 import { createItem } from './item'
-import { addItem, addItems, removeItem, updateItem, validateTransaction, generateSaveTransaction } from './transaction'
+import { createTransaction, addItem, addItems, removeItem, updateItem, validateTransaction, generateSaveTransaction } from './transaction'
 import { getBalanceOf } from './balance'
 
 
@@ -8,11 +8,12 @@ import { getBalanceOf } from './balance'
 export { 
   generateCreateAccount,
   generateSaveAccount,
-  createItem, 
-  addItem, 
+  createItem,
+  createTransaction,
+  addItem,
   addItems,
-  removeItem, 
-  updateItem, 
+  removeItem,
+  updateItem,
   validateTransaction,
   getBalanceOf,
   generateSaveTransaction

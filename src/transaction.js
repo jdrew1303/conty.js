@@ -4,9 +4,12 @@ const generateTransactionId = () => `${new Date().toISOString()}TOKEN${generateR
 
 const emptyTransaction = () => ({
   _id: generateTransactionId(),
-  items: [], 
+  date: new Date().toISOString(),
+  items: [],
   errors: []
 })
+
+export const createTransaction = (date) => ({ ...emptyTransaction, date: date.toISOString() })
 
 export const addItem = (item, transaction = emptyTransaction()) => {
   return validateTransaction({
@@ -29,7 +32,7 @@ export const removeItem = (itemId, transaction) => {
 export const updateItem = (modifiedItem, transaction) => {
   return validateTransaction({
     ...transaction,
-    items: transaction.items.map(item => item._id === modifiedItem._id ? createItem(modifiedItem) : item )
+    items: transaction.items.map(item => item._id === modifiedItem._id ? createItem(modifiedItem) : item)
   })
 }
 
@@ -41,12 +44,12 @@ const checkAmount = (transaction) => (
   transaction.items.reduce((prev, curr) => prev + curr.amount, 0) === 0 ? transaction : addAmountNotZeroError(transaction)
 )
 
-const checkInvalidItem =  (transaction) =>  (
-  concatItemErrors(transaction).length > 0 ? addItemErrors(transaction, concatItemErrors(transaction)): transaction
+const checkInvalidItem = (transaction) => (
+  concatItemErrors(transaction).length > 0 ? addItemErrors(transaction, concatItemErrors(transaction)) : transaction
 )
 
-const concatItemErrors = (transaction) =>  (
-  transaction.items.reduce((prev, curr) => curr.errors ? prev.concat(curr.errors): prev, [])
+const concatItemErrors = (transaction) => (
+  transaction.items.reduce((prev, curr) => curr.errors ? prev.concat(curr.errors) : prev, [])
 )
 // Add new validations functions to the array
 const validations = [
@@ -63,12 +66,12 @@ const addItemErrors = (transaction, itemsErrors) => (
 )
 
 const clearErrors = (transaction) => {
-  return {...transaction, errors: []} 
+  return { ...transaction, errors: [] }
 }
 
 export const generateSaveTransaction = (saveFx) => {
   return (transaction) => {
-    if(transaction.errors.length > 0){
+    if (transaction.errors.length > 0) {
       throw "Can not save transaction due to errors"
     } else {
       return saveFx(transaction)
