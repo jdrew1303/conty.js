@@ -1,7 +1,9 @@
 import { createItem } from './item'
 import { generateRandomOfFour } from './helpers'
-const generateTransactionId = () => `${new Date().toISOString()}TOKEN${generateRandomOfFour()}`
 
+import R from 'ramda'
+
+const generateTransactionId = () => `${new Date().toISOString()}TOKEN${generateRandomOfFour()}`
 const emptyTransaction = () => ({
   _id: generateTransactionId(),
   date: new Date().toISOString(),
@@ -9,32 +11,32 @@ const emptyTransaction = () => ({
   errors: []
 })
 
-export const createTransaction = (date) => ({ ...emptyTransaction, date: date.toISOString() })
+export const createTransaction = (props) => (props ? { ...emptyTransaction(), ...props } : { ...emptyTransaction() })
 
-export const addItem = (item, transaction = emptyTransaction()) => {
+export const addItem = R.curry((item, transaction) => {
   return validateTransaction({
     ...transaction,
     items: [...transaction.items, createItem(item)]
   })
-}
+})
 
-export const addItems = (items, transaction = emptyTransaction()) => (
+export const addItems = R.curry((items, transaction) => (
   items.reduce((transaction, item) => addItem(item, transaction), transaction)
-)
+))
 
-export const removeItem = (itemId, transaction) => {
+export const removeItem = R.curry((itemId, transaction) => {
   return validateTransaction({
     ...transaction,
     items: transaction.items.filter(item => item._id !== itemId)
   })
-}
+})
 
-export const updateItem = (modifiedItem, transaction) => {
+export const updateItem = R.curry((modifiedItem, transaction) => {
   return validateTransaction({
     ...transaction,
     items: transaction.items.map(item => item._id === modifiedItem._id ? createItem(modifiedItem) : item)
   })
-}
+})
 
 const validateTransaction = (transaction) => {
   return validations.reduce((prev, curr) => curr(prev), clearErrors(transaction))
@@ -45,7 +47,7 @@ const checkAmount = (transaction) => (
 )
 
 const checkInvalidItem = (transaction) => (
-  concatItemErrors(transaction).length > 0 ? addItemErrors(transaction, concatItemErrors(transaction)) : transaction
+  concatItemErrors(transaction).length > 0 ? addItemErrors(concatItemErrors(transaction), transaction) : transaction
 )
 
 const concatItemErrors = (transaction) => (
@@ -61,7 +63,7 @@ const addAmountNotZeroError = (transation) => (
   { ...transation, errors: ['Transaction Amount not zero'] }
 )
 
-const addItemErrors = (transaction, itemsErrors) => (
+const addItemErrors = (itemsErrors, transaction) => (
   { ...transaction, errors: [...transaction.errors, ...itemsErrors] }
 )
 

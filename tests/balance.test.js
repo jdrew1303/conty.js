@@ -1,4 +1,4 @@
-import { createItem, addItem, addItems, removeItem, updateItem, validateTransaction, getBalanceOf } from '../src'
+import { createTransaction, createItem, addItem, addItems, removeItem, updateItem, validateTransaction, getBalanceOf } from '../src'
 
 describe('balances', () => {
   // Seeds
@@ -6,7 +6,7 @@ describe('balances', () => {
     addItems([{ accountId: 'one', amount: 100 }, { accountId: 'two', amount: -100 }]),
     addItems([{ accountId: 'one', amount: 100 }, { accountId: 'three', amount: -70 }, { accountId: 'four', amount: -30 }]),
     addItems([{ accountId: 'one', amount: 100 }, { accountId: 'two', amount: -100 }])
-  ]
+  ].map(t => t(createTransaction()))
   it('gets balances of account one', () => {
     expect(getBalanceOf('one', trasactions)).toEqual(300)
   })

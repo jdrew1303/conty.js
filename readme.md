@@ -24,5 +24,6 @@ account:
 
 transaction: {
   _id: generatedRandomly,
+  date: dateISOString
   items: item[]
 }
