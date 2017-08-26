@@ -41,15 +41,15 @@ describe('it removes item from transactions', () => {
     ).toEqual(2)
   })
   it('add two item', () => {
-    const item1 = createItem({ accountId: 'bankYYY', amount: 1 }),
-      item2 = createItem({ accountId: 'bankZZZ', amount: -1 }),
+    const item1 = createItem({ accountId: 'bankYYY', amount: 1, dueDate: '2017-02-02' }),
+      item2 = createItem({ accountId: 'bankZZZ', amount: -1, dueDate: '2017-02-02' }),
       transaction = addItems([item1, item2],createTransaction())
     expect(removeItem(item1._id, transaction).items.length).toEqual(1)
     expect(R.pipe(removeItem(item2._id), removeItem(item1._id))(transaction).items.length).toEqual(0)
   })
   it('update item', () => {
-    const item1 = createItem({ accountId: 'bankYYY', amount: 1 }),
-      item2 = createItem({ accountId: 'bankZZZ', amount: -3 }),
+    const item1 = createItem({ accountId: 'bankYYY', amount: 1, dueDate: '2017-02-02'  }),
+      item2 = createItem({ accountId: 'bankZZZ', amount: -3, dueDate: '2017-02-02'  }),
       transaction = addItems([item1, item2],createTransaction())
     expect(transaction.errors.join('')).toMatch('zero')
     const updatedTransaction = updateItem({ ...item2, amount: -1 }, transaction)

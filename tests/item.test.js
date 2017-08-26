@@ -2,14 +2,14 @@ import { createItem } from '../src'
 
 describe('createItem missing keys errors', () => {
   it('has errors if missing amount', () => {
-    expect(createItem({ accountId: 'bankYYY' }).errors.find(error => error.type === 'missingKeys').values).toContain('amount')
+    expect(createItem({ accountId: 'bankYYY', dueDate: '2017-02-02'  }).errors.find(error => error.type === 'missingKeys').values).toContain('amount')
   })
   it('has errors if type missing accountId', () => {
-    expect(createItem({ amount: 25.25 }).errors.find(error => error.type === 'missingKeys').values).toContain('accountId')
+    expect(createItem({ amount: 25.25, dueDate: '2017-02-02'  }).errors.find(error => error.type === 'missingKeys').values).toContain('accountId')
   })
   it('has errors if type missing name or name', () => {
-    expect(createItem({}).errors.find(error => error.type === 'missingKeys').values).toContain('amount')
-    expect(createItem({}).errors.find(error => error.type === 'missingKeys').values).toContain('accountId')
+    expect(createItem({dueDate: '2017-02-02' }).errors.find(error => error.type === 'missingKeys').values).toContain('amount')
+    expect(createItem({dueDate: '2017-02-02' }).errors.find(error => error.type === 'missingKeys').values).toContain('accountId')
   })
 })
 
