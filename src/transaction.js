@@ -2,10 +2,12 @@ import { createItem } from './item'
 import { generateRandomOfFour } from './helpers'
 
 import R from 'ramda'
+import { Maybe } from 'ramda-fantasy'
 
 const generateTransactionId = () => `${new Date().toISOString()}TOKEN${generateRandomOfFour()}`
 const emptyTransaction = () => ({
   _id: generateTransactionId(),
+  doc_type: 'transaction',
   date: new Date().toISOString(),
   items: [],
   errors: []
@@ -16,7 +18,7 @@ export const createTransaction = (props) => (props ? { ...emptyTransaction(), ..
 export const addItem = R.curry((item, transaction) => {
   return validateTransaction({
     ...transaction,
-    items: [...transaction.items, createItem(item)]
+    items: [...transaction.items, createItem(item, transaction)]
   })
 })
 
@@ -41,9 +43,10 @@ export const updateItem = R.curry((modifiedItem, transaction) => {
 const validateTransaction = (transaction) => {
   return validations.reduce((prev, curr) => curr(prev), clearErrors(transaction))
 }
-
+// Math.round(sum * 1000000) con esto elimino los errores decimales e-7 no nos afectan. la lib soporta 4 decimales 
 const checkAmount = (transaction) => (
-  transaction.items.reduce((prev, curr) => prev + curr.amount, 0) === 0 ? transaction : addAmountNotZeroError(transaction)
+  Maybe(transaction.items.reduce((prev, curr) => prev + curr.amount, 0))
+  .map(sum => Math.round(sum * 10000000) === 0 ? transaction : addAmountNotZeroError(transaction, sum)).value
 )
 
 const checkInvalidItem = (transaction) => (
@@ -59,8 +62,8 @@ const validations = [
   checkInvalidItem
 ]
 
-const addAmountNotZeroError = (transation) => (
-  { ...transation, errors: ['Transaction Amount not zero'] }
+const addAmountNotZeroError = (transation, sum) => (
+  { ...transation, errors: [`Transaction amount is not zero. Difference ${sum}`] }
 )
 
 const addItemErrors = (itemsErrors, transaction) => (
@@ -74,7 +77,7 @@ const clearErrors = (transaction) => {
 export const generateSaveTransaction = (saveFx) => {
   return (transaction) => {
     if (transaction.errors.length > 0) {
-      throw "Can not save transaction due to errors"
+      throw `Can not save transaction due to errors ${transaction.errors.join('')}`
     } else {
       return saveFx(transaction)
     }
