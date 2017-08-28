@@ -1,51 +1,56 @@
 import { createItem } from './item'
 import { generateRandomOfFour } from './helpers'
-const generateTransactionId = () => `${new Date().toISOString()}TOKEN${generateRandomOfFour()}`
 
+import R from 'ramda'
+import { Maybe } from 'ramda-fantasy'
+
+const generateTransactionId = () => `${new Date().toISOString()}TOKEN${generateRandomOfFour()}`
 const emptyTransaction = () => ({
   _id: generateTransactionId(),
+  doc_type: 'transaction',
   date: new Date().toISOString(),
   items: [],
   errors: []
 })
 
-export const createTransaction = (date) => ({ ...emptyTransaction, date: date.toISOString() })
+export const createTransaction = (props) => (props ? { ...emptyTransaction(), ...props } : { ...emptyTransaction() })
 
-export const addItem = (item, transaction = emptyTransaction()) => {
+export const addItem = R.curry((item, transaction) => {
   return validateTransaction({
     ...transaction,
-    items: [...transaction.items, createItem(item)]
+    items: [...transaction.items, createItem(item, transaction)]
   })
-}
+})
 
-export const addItems = (items, transaction = emptyTransaction()) => (
+export const addItems = R.curry((items, transaction) => (
   items.reduce((transaction, item) => addItem(item, transaction), transaction)
-)
+))
 
-export const removeItem = (itemId, transaction) => {
+export const removeItem = R.curry((itemId, transaction) => {
   return validateTransaction({
     ...transaction,
     items: transaction.items.filter(item => item._id !== itemId)
   })
-}
+})
 
-export const updateItem = (modifiedItem, transaction) => {
+export const updateItem = R.curry((modifiedItem, transaction) => {
   return validateTransaction({
     ...transaction,
     items: transaction.items.map(item => item._id === modifiedItem._id ? createItem(modifiedItem) : item)
   })
-}
+})
 
 const validateTransaction = (transaction) => {
   return validations.reduce((prev, curr) => curr(prev), clearErrors(transaction))
 }
-
+// Math.round(sum * 1000000) con esto elimino los errores decimales e-7 no nos afectan. la lib soporta 4 decimales 
 const checkAmount = (transaction) => (
-  transaction.items.reduce((prev, curr) => prev + curr.amount, 0) === 0 ? transaction : addAmountNotZeroError(transaction)
+  Maybe(transaction.items.reduce((prev, curr) => prev + curr.amount, 0))
+  .map(sum => Math.round(sum * 10000000) === 0 ? transaction : addAmountNotZeroError(transaction, sum)).value
 )
 
 const checkInvalidItem = (transaction) => (
-  concatItemErrors(transaction).length > 0 ? addItemErrors(transaction, concatItemErrors(transaction)) : transaction
+  concatItemErrors(transaction).length > 0 ? addItemErrors(concatItemErrors(transaction), transaction) : transaction
 )
 
 const concatItemErrors = (transaction) => (
@@ -57,11 +62,11 @@ const validations = [
   checkInvalidItem
 ]
 
-const addAmountNotZeroError = (transation) => (
-  { ...transation, errors: ['Transaction Amount not zero'] }
+const addAmountNotZeroError = (transation, sum) => (
+  { ...transation, errors: [`Transaction amount is not zero. Difference ${sum}`] }
 )
 
-const addItemErrors = (transaction, itemsErrors) => (
+const addItemErrors = (itemsErrors, transaction) => (
   { ...transaction, errors: [...transaction.errors, ...itemsErrors] }
 )
 
@@ -72,7 +77,7 @@ const clearErrors = (transaction) => {
 export const generateSaveTransaction = (saveFx) => {
   return (transaction) => {
     if (transaction.errors.length > 0) {
-      throw "Can not save transaction due to errors"
+      throw `Can not save transaction due to errors ${transaction.errors.join('')}`
     } else {
       return saveFx(transaction)
     }
